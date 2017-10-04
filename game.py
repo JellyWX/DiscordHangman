@@ -18,12 +18,11 @@ class GameRoom(object):
 
   word = ''
 
-  output_str = []
-
   def __init__(self,channel):
     self.channel = channel
     active_channels.append(channel)
     self.players = []
+    self.output_str = []
 
   async def update_vars(self):
     self.name = str(self.name)
@@ -59,6 +58,8 @@ class GameRoom(object):
       wordm = await client.wait_for_message(author=user_set)
       word = wordm.content.lower()
 
+    self.output_str = []
+    
     self.word = word
     for char in self.word:
       if char == ' ':
