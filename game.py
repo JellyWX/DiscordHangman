@@ -47,7 +47,7 @@ class GameRoom(object):
     user_set = choice(self.players) ## select a user from the players on the game
 
     print('player {} selected. DMing now'.format(user_set.name))
-    await client.send_message(self.channel, '{} has been chosen to select a word!'.format(user_set.name))
+    await client.send_message(self.channel, '{} has been chosen to select a word! (check your DMs {})'.format(user_set.name, user_set.mention))
     e = await client.send_message(user_set, '**It\'s your turn to choose a word!** Please type it below and hit enter:')
 
     wordm = await client.wait_for_message(author=user_set,channel=e.channel)
