@@ -1,7 +1,7 @@
 from globalvars import *
 
 async def content_parser(message):
-  guess = message.content.lower()
+  guess = message.content.lower()[1:]
 
   if message.author in current_players and message.channel in active_channels:
     if alphaStr(guess):

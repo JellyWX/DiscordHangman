@@ -1,8 +1,4 @@
-import asyncio
-import discord
-
 from globalvars import *
-
 
 async def start_match(message):
   for lobby in games:

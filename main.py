@@ -39,7 +39,7 @@ async def on_message(message):
   elif message.content.startswith('@start'):
     await start_match(message)
 
-  else:
+  elif message.content.startswith('?'):
     await content_parser(message)
 
 try:
