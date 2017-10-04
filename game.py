@@ -48,9 +48,13 @@ class GameRoom(object):
 
     print('player {} selected. DMing now'.format(user_set.name))
     await client.send_message(self.channel, '{} has been chosen to select a word!'.format(user_set.name))
-    await client.send_message(user_set, '**It\'s your turn to choose a word!** Please type it below and hit enter:')
+    e = await client.send_message(user_set, '**It\'s your turn to choose a word!** Please type it below and hit enter:')
 
-    wordm = await client.wait_for_message(author=user_set)
+    wordm = await client.wait_for_message(author=user_set,channel=e.channel)
+
+    print(wordm.channel)
+    print(e.channel)
+
     word = wordm.content.lower()
     while not alphaStr(word):
 
@@ -59,7 +63,7 @@ class GameRoom(object):
       word = wordm.content.lower()
 
     self.output_str = []
-    
+
     self.word = word
     for char in self.word:
       if char == ' ':
