@@ -18,6 +18,10 @@ class GameRoom(object):
 
   word = ''
 
+  guesses = 10
+
+  used_guesses = 0
+
   def __init__(self,channel):
     self.channel = channel
     active_channels.append(channel)
@@ -107,7 +111,13 @@ class GameRoom(object):
         await client.send_message(self.channel, 'You guessed one character correctly.\n{}'.format(''.join(self.output_str)))
 
       else:
-        await client.send_message(self.channel, 'Incorrect guess! Try again\n{}'.format(''.join(self.output_str)))
+        self.used_guesses += 1
+        await client.send_message(self.channel, 'Incorrect guess! Try again ({} incorrect guesses remaining)\n{}'.format(self.guesses-self.used_guesses,''.join(self.output_str)))
+
+        if self.used_guesses >= self.guesses:
+          await client.send_message(self.channel, 'You ran out of guesses! The word was {}. Better luck next time! Type `hm>start` to restart'.format(self.word))
+          self.word = ''
+          self.started = 0
 
   async def quit(self,user):
     await client.send_message(self.channel,'Boo! {} pussied out. What a loser.'.format(user.name))
