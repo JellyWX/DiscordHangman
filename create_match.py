@@ -5,6 +5,9 @@ from game import GameRoom
 
 
 async def create_match(msg):
+  if msg.author in current_players:
+    await client.send_message(msg.channel, 'Please quit your current match first! Use `hm>quit` to quit a match.')
+
   text = msg.content.lower().split(' ')
   text.pop(0) ## remove the command word
 

@@ -11,7 +11,7 @@ class GameRoom(object):
   name = None
   public = 1
   password = ''
-  max_players = 2
+  max_players = 6
 
   closed = 0
   started = 0
@@ -22,6 +22,7 @@ class GameRoom(object):
     self.channel = channel
     active_channels.append(channel)
     self.players = []
+    self.active_player = None
     self.output_str = []
 
   async def update_vars(self):
@@ -35,12 +36,12 @@ class GameRoom(object):
     self.public = 1 if self.password == '' else 0
 
   async def join(self,user):
-    if self.max_players > len(self.players) and user not in self.players:
-      self.players.append(user)
-      current_players.append(user)
+    if self.max_players < len(self.players):
+      await client.send_message(user,'This lobby is full. Sorry kiddo')
 
     else:
-      await client.send_message(user,'This lobby is full. Sorry kiddo')
+      self.players.append(user)
+      current_players.append(user)
 
   async def set_word(self):
     print('match has begun. selecting player')
@@ -74,17 +75,18 @@ class GameRoom(object):
     await client.send_message(user_set, 'Your word has been set to {}!'.format(word))
     await client.send_message(self.channel, '{} has finished setting the word; start guessing (a guess starts with a `?` character)!\n{}'.format(user_set.name,''.join(self.output_str)))
 
+    self.active_player = user_set
 
   async def process_guess(self,guess):
     if len(guess) > 1 and guess != self.word:
-      await client.send_message(self.channel, 'Incorrect! The word was {}. Better luck next time!'.format(self.word))
-      active_channels.remove(self.channel)
-      self.closed = 1
+      await client.send_message(self.channel, 'Incorrect! The word was {}. Better luck next time! Type `hm>start` to restart'.format(self.word))
+      self.word = ''
+      self.started = 0
 
     elif guess == self.word:
-      await client.send_message(self.channel, 'Correct! The word was {}!'.format(self.word))
-      active_channels.remove(self.channel)
-      self.closed = 1
+      await client.send_message(self.channel, 'Correct! The word was {}! Type `hm>start` to restart'.format(self.word))
+      self.word = ''
+      self.started = 0
 
     else:
       if guess in self.word:
@@ -94,6 +96,13 @@ class GameRoom(object):
           if char == guess:
             self.output_str[x] = guess
           x += 1
+
+        if '-' not in self.output_str:
+          await client.send_message(self.channel, 'You got it! The word was {}! Type `hm>start` to restart'.format(self.word))
+          self.word = ''
+          self.started = 0
+
+          return
 
         await client.send_message(self.channel, 'You guessed one character correctly.\n{}'.format(''.join(self.output_str)))
 

@@ -11,7 +11,17 @@ from start_match import start_match
 from quit_match import quit_match
 from event_dispatch import event_dispatch
 from content_parser import content_parser
+from show_players import show_players
 
+
+command_map = {
+  'hm>create' : create_match,
+  'hm>join' : join_match,
+  'hm>quit' : quit_match,
+  'hm>start' : start_match,
+  'hm>players' : show_players,
+  '?' : content_parser
+}
 
 @client.event ## print some stuff to console when the bot is activated
 async def on_ready():
@@ -24,22 +34,19 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+
   if message.content in ['', None] or message.author == client.user:
     return
 
-  if message.content.startswith('@create'):
-    await create_match(message)
+  cmd_content = message.content.lower()
 
-  elif message.content.startswith('@join'):
-    await join_match(message)
+  cmd = cmd_content.split(' ')[0]
+  if cmd in command_map.keys():
+      await command_map[cmd](message)
 
-  elif message.content.startswith('@quit'):
-    await quit_match(message)
+      return
 
-  elif message.content.startswith('@start'):
-    await start_match(message)
-
-  elif message.content.startswith('?'):
+  elif cmd[0] == '?':
     await content_parser(message)
 
 try:

@@ -4,6 +4,9 @@ import discord
 from globalvars import *
 
 async def join_match(message):
+  if message.author in current_players:
+    await client.send_message(message.channel, 'Please quit your current match first! Use `hm>quit` to quit a match.')
+    
   text = message.content.lower().split(' ')
   text.pop(0)
 

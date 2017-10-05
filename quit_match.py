@@ -13,4 +13,4 @@ async def quit_match(message):
         current_players.remove(quitter)
 
   else:
-    await client.send_message(message.channel, 'You are not in a match! To join a match, use `@join`. To create a match, use `@create`')
+    await client.send_message(message.channel, 'You are not in a match! To join a match, use `hm>join`. To create a match, use `hm>create`')
