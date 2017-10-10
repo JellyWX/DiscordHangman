@@ -86,11 +86,13 @@ class GameRoom(object):
       await client.send_message(self.channel, 'Incorrect! The word was {}. Better luck next time! Type `hm>start` to restart'.format(self.word))
       self.word = ''
       self.started = 0
+      self.used_guesses = 0
 
     elif guess == self.word:
       await client.send_message(self.channel, 'Correct! The word was {}! Type `hm>start` to restart'.format(self.word))
       self.word = ''
       self.started = 0
+      self.used_guesses = 0
 
     else:
       if guess in self.word:
@@ -105,6 +107,7 @@ class GameRoom(object):
           await client.send_message(self.channel, 'You got it! The word was {}! Type `hm>start` to restart'.format(self.word))
           self.word = ''
           self.started = 0
+	  self.used_guesses = 0
 
           return
 
@@ -118,6 +121,7 @@ class GameRoom(object):
           await client.send_message(self.channel, 'You ran out of guesses! The word was {}. Better luck next time! Type `hm>start` to restart'.format(self.word))
           self.word = ''
           self.started = 0
+	  self.used_guesses = 0
 
   async def quit(self,user):
     await client.send_message(self.channel,'Boo! {} pussied out. What a loser.'.format(user.name))

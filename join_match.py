@@ -15,6 +15,7 @@ async def join_match(message):
 
       if room.public: ## if the room has no password
         await room.join(message.author)
+	await client.send_message(messae.channel, 'You joined the room {}!'.format(room.name))
 
       else: ## if the room is password protected
         if len(text) == 1: ## if no password was provided
