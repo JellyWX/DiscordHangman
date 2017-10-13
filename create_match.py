@@ -12,7 +12,6 @@ async def create_match(msg):
   text.pop(0) ## remove the command word
 
   Room = GameRoom(channel=msg.channel)
-  await Room.join(msg.author)
 
   args = {
     'name' : Room.name,
@@ -40,4 +39,5 @@ async def create_match(msg):
     await client.send_message(msg.channel, 'There was an error creating your room. Please check the @help manual for correct command usage')
     return
 
+  await Room.join(msg.author)
   games.append(Room)
